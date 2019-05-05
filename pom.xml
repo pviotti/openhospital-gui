@@ -28,6 +28,9 @@
 					<include>**/*.xml</include>
 				</includes>
 			</resource>
+			<resource>
+				<directory>bundle</directory>
+			</resource>
 		</resources>
 		<plugins>
 			<plugin>
@@ -192,6 +195,32 @@
 					<finalName>OpenHospital20/bin/OH-gui</finalName>
 				</configuration>
 			</plugin>
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-shade-plugin</artifactId>
+	            <version>1.7</version>
+	            <executions>
+	                <execution>
+	                    <phase>package</phase>
+	                    <goals>
+	                        <goal>shade</goal>
+	                    </goals>
+	                </execution>
+	            </executions>
+	            <configuration>
+		            <shadedArtifactAttached>true</shadedArtifactAttached>
+		            <shadedClassifierName>allinone</shadedClassifierName>
+					<transformers> <!-- This is needed to avoid conflicts spring conf files from 
+								oh-gui and oh-core when creating the uber/fat jar -->
+					    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+							<resource>META-INF/spring.handlers</resource>
+					    </transformer>
+					    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+							<resource>META-INF/spring.schemas</resource>
+					    </transformer>
+					</transformers>
+				</configuration>
+	        </plugin>
 		</plugins>
 	</build>
 	
